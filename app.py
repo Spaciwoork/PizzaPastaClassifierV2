@@ -6,11 +6,14 @@ from io import BytesIO
 from flask import Flask, request, make_response, jsonify
 
 from ModelClassifier import ModelClassifier
+from CoreHelper import CoreHelper
 from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 import urllib.request
 import io
+from ImageModel import ImageModel
+
 
 
 app = Flask(__name__)
@@ -26,6 +29,7 @@ models, optimizer = model.load_checkpoint(nn_filename)
 def receive_message():
     if request.method == 'GET':
         image_url = request.args["image"]
+        ImageModel.create(image_url)
         prob, classes = model.predict(urllib.request.urlopen(image_url), models)
         max_index = np.argmax(prob)
         max_probability = prob[max_index]
@@ -43,8 +47,8 @@ def receive_message():
 
 def launcher():
     use_reloader = True
+    CoreHelper.mongo_connection()
     app.run(port=5000, host='0.0.0.0', use_reloader=use_reloader)
-
 
 if __name__ == '__main__':
     launcher()

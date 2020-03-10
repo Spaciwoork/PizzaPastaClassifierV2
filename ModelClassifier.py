@@ -10,7 +10,7 @@ from torch.autograd import Variable
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
-
+from ImageModel import ImageModel
 
 
 class ModelClassifier():
